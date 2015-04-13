@@ -1,0 +1,102 @@
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you'll amass, the slower it'll run and the greater likelihood for issues).
+#
+# It's strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema.define(version: 20150413221830) do
+
+  create_table "fixtures", force: true do |t|
+    t.string   "Div"
+    t.date     "Date"
+    t.string   "HomeTeam"
+    t.string   "AwayTeam"
+    t.integer  "FTHG"
+    t.integer  "FTAG"
+    t.integer  "HTHG"
+    t.integer  "HTAG"
+    t.integer  "HP"
+    t.integer  "AP"
+    t.integer  "HGoalsF"
+    t.integer  "HGoalsA"
+    t.integer  "HChancesF"
+    t.integer  "HChancesA"
+    t.integer  "HOnTargetF"
+    t.integer  "HOnTargetA"
+    t.integer  "HAtk"
+    t.integer  "HDef"
+    t.integer  "AGoalsF"
+    t.integer  "AGoalsA"
+    t.integer  "AChancesF"
+    t.integer  "AChancesA"
+    t.integer  "AOnTargetF"
+    t.integer  "AOnTargetA"
+    t.integer  "AAtk"
+    t.integer  "ADef"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "matches", force: true do |t|
+    t.string   "Div"
+    t.date     "Date"
+    t.string   "HomeTeam"
+    t.string   "AwayTeam"
+    t.string   "FTHG"
+    t.string   "FTAG"
+    t.string   "HTHG"
+    t.string   "HTAG"
+    t.string   "HS"
+    t.string   "AS"
+    t.string   "HST"
+    t.string   "AST"
+    t.string   "HF"
+    t.string   "AF"
+    t.string   "HC"
+    t.string   "AC"
+    t.string   "HY"
+    t.string   "AY"
+    t.string   "HR"
+    t.string   "AR"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "teams", force: true do |t|
+    t.string   "team"
+    t.integer  "lastseasonposition"
+    t.integer  "currentseasonposition"
+    t.integer  "games_played"
+    t.integer  "goals_for"
+    t.integer  "goals_against"
+    t.integer  "total_shots_for"
+    t.integer  "shots_for_on_target"
+    t.integer  "total_shots_against"
+    t.integer  "shots_against_on_target"
+    t.integer  "wins"
+    t.integer  "draws"
+    t.integer  "losses"
+    t.integer  "points"
+    t.float    "strength",                    limit: 24
+    t.integer  "avg_goals_for"
+    t.integer  "avg_goals_against"
+    t.integer  "avg_total_shots_for"
+    t.integer  "avg_shots_for_on_target"
+    t.integer  "avg_total_shots_against"
+    t.integer  "avg_shots_against_on_target"
+    t.integer  "avg_wins"
+    t.integer  "avg_draws"
+    t.integer  "avg_losses"
+    t.integer  "avg_points"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+end

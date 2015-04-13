@@ -1,0 +1,16 @@
+class CreateFixtures < ActiveRecord::Migration
+  def change
+    create_table :fixtures do |t|
+			t.string :Div	
+			t.date :Date
+			t.string :HomeTeam
+			t.string :AwayTeam
+			t.integer :FTHG
+			t.integer :FTAG
+			t.integer :HTHG
+			t.integer :HTAG
+
+      t.timestamps
+    end
+  end
+end

@@ -1,0 +1,4 @@
+class Renamematchescolumns < ActiveRecord::Migration
+  def change
+  end
+end
