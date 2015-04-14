@@ -3,7 +3,7 @@ class MatchesController < ApplicationController
 def importdata
 	
 	@BaseURL = 'http://football-data.co.uk/mmz4281/'
-	@Season = '1415'
+	@Season = '1213'
 	@FixturesURL = 'http://www.football-data.co.uk/fixtures.csv'
 	
 	getresultsdata(@BaseURL + @Season + "/" + "E0.csv")
@@ -68,7 +68,7 @@ def getfixturesdata(url)
 	CSV.parse(csv_text, :headers => true).each do |row|
 		fixture_data = row.to_hash
 		
-		fixture = Fixtures.where("Date = ? and HomeTeam = ? and AwayTeam = ?", Date.strptime(match_data["Date"],'%d/%m/%y'), match_data["HomeTeam"], match_data["AwayTeam"])
+		fixture = Fixtures.where("Date = ? and HomeTeam = ? and AwayTeam = ?", Date.strptime(fixture_data["Date"],'%d/%m/%y'), fixture_data["HomeTeam"], fixture_data["AwayTeam"])
 		
 		if fixture.count==0
 			
