@@ -5,7 +5,15 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-	match '/matches/importdata' =>  'matches#importdata', :via => [:get], :as => :importdata
+	match '/matches/importdata/:season' =>  'matches#importdata', :via => [:get], :as => :importdata
+	
+	match '/teams/createseason/:season' =>  'teams#createseason', :via => [:get], :as => :createseason
+
+	match '/formmatches/getform/:season' =>  'form_matches#getform', :via => [:get], :as => :getform
+
+	match '/leagues/createseason/:season' =>  'leagues#createseason', :via => [:get], :as => :createleagues
+
+	match '/runforecast' => 'matches#forecastfixtures', :via => [:get], :as => :forecastfixtures
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -1,0 +1,4 @@
+class UpdateMatchesAddForecast < ActiveRecord::Migration
+  def change
+  end
+end

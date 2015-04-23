@@ -1,0 +1,4 @@
+class UpdateLeagues < ActiveRecord::Migration
+  def change
+  end
+end

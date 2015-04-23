@@ -1,0 +1,8 @@
+class CreateFormMatches < ActiveRecord::Migration
+  def change
+    create_table :form_matches do |t|
+
+      t.timestamps
+    end
+  end
+end

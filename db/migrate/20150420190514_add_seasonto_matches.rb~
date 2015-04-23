@@ -1,0 +1,4 @@
+class AddSeasontoMatches < ActiveRecord::Migration
+  def change
+  end
+end

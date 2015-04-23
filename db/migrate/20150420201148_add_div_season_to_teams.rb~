@@ -1,0 +1,4 @@
+class AddDivSeasonToTeams < ActiveRecord::Migration
+  def change
+  end
+end

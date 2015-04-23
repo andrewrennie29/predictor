@@ -6,6 +6,10 @@ ruby '2.1.5'
 #Puma required for AWS
 gem 'puma'
 
+#statsgems
+
+gem 'distribution'
+
 #See https://github.com/tzinfo/tzinfo/wiki/Resolving-TZInfo::DataSourceNotFound-Errors
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
 

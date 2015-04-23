@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150414052305) do
+ActiveRecord::Schema.define(version: 20150422170001) do
 
   create_table "fixtures", force: true do |t|
     t.string   "Div"
@@ -42,17 +42,28 @@ ActiveRecord::Schema.define(version: 20150414052305) do
     t.integer  "ADef"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "home_win",   limit: 24
+    t.float    "away_win",   limit: 24
+    t.float    "draw",       limit: 24
+  end
+
+  create_table "form_matches", force: true do |t|
+    t.string   "team"
+    t.float    "goalsfor",     limit: 24
+    t.float    "goalsagainst", limit: 24
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "leagues", force: true do |t|
-    t.string   "Season"
-    t.string   "Div"
+    t.string   "season"
+    t.string   "div"
     t.string   "Team"
     t.integer  "Pos"
     t.integer  "HPlayed"
-    t.integer  "HFHT"
-    t.integer  "HFFT"
-    t.integer  "HAHT"
+    t.integer  "games_played"
+    t.integer  "home_goals"
+    t.integer  "away_goals"
     t.integer  "HAFT"
     t.integer  "HHS"
     t.integer  "HAS"
@@ -104,15 +115,21 @@ ActiveRecord::Schema.define(version: 20150414052305) do
     t.string   "AR"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "season"
+    t.integer  "forecast_hg"
+    t.integer  "forecast_ag"
+    t.float    "forecast_homewin", limit: 24
+    t.float    "forecast_draw",    limit: 24
+    t.float    "forecast_awaywin", limit: 24
   end
 
   create_table "teams", force: true do |t|
     t.string   "team"
     t.integer  "lastseasonposition"
     t.integer  "currentseasonposition"
-    t.integer  "games_played"
-    t.integer  "goals_for"
-    t.integer  "goals_against"
+    t.integer  "hgp"
+    t.integer  "hgf"
+    t.integer  "hga"
     t.integer  "total_shots_for"
     t.integer  "shots_for_on_target"
     t.integer  "total_shots_against"
@@ -134,6 +151,11 @@ ActiveRecord::Schema.define(version: 20150414052305) do
     t.integer  "avg_points"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "div"
+    t.string   "season"
+    t.integer  "agp"
+    t.integer  "agf"
+    t.integer  "aga"
   end
 
 end

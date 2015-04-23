@@ -1,0 +1,10 @@
+class UpdateTeams < ActiveRecord::Migration
+  def change
+  
+
+  	add_column :teams, :agp, :integer
+  	add_column :teams, :agf, :integer
+  	add_column :teams, :aga, :integer
+  	
+  end
+end
