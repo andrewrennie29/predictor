@@ -1,0 +1,2 @@
+$("#inner-bet-modal").html("<%= escape_javascript(render 'view') %>");
+$("#bet-modal").modal("show");

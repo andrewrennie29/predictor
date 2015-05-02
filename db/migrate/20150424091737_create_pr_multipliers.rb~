@@ -1,0 +1,8 @@
+class CreatePrMultipliers < ActiveRecord::Migration
+  def change
+    create_table :pr_multipliers do |t|
+
+      t.timestamps
+    end
+  end
+end

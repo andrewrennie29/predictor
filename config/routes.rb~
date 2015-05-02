@@ -8,11 +8,23 @@ Rails.application.routes.draw do
 	match '/matches/importdata/:season' =>  'matches#importdata', :via => [:get], :as => :importdata
 	
 	match '/teams/createseason/:season' =>  'teams#createseason', :via => [:get], :as => :createseason
+	
+	match '/teams/perfectscores' =>  'teams#perfectscores', :via => [:get], :as => :perfectscores
+	
+	match '/formmatches/getform/:season' =>  'form_matches#getform', :via => [:get], :as => :getform
 
 	match '/leagues/createseason/:season' =>  'leagues#createseason', :via => [:get], :as => :createleagues
 
 	match '/runforecast' => 'matches#forecastfixtures', :via => [:get], :as => :forecastfixtures
-
+	
+	match '/matches/forecastseason/:season' =>  'matches#forecastseason', :via => [:get], :as => :forecastseason
+	
+	match '/fixtures/view' => 'fixtures#view', :via => [:get], :as => :viewforecast
+	
+	match '/fixtures/recordbet/:id' => 'fixtures#recordbet', :via => [:get], :as => :recordbet
+	
+	patch '/fixtures/updatebet/' => 'fixtures#updatebet', :via => :post
+	
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

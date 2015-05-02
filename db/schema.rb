@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150422170001) do
+ActiveRecord::Schema.define(version: 20150428184813) do
 
   create_table "fixtures", force: true do |t|
     t.string   "Div"
@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(version: 20150422170001) do
     t.float    "home_win",   limit: 24
     t.float    "away_win",   limit: 24
     t.float    "draw",       limit: 24
+    t.float    "bet_stake",  limit: 24
+    t.float    "bet_odds",   limit: 24
   end
 
   create_table "form_matches", force: true do |t|
@@ -118,9 +120,35 @@ ActiveRecord::Schema.define(version: 20150422170001) do
     t.string   "season"
     t.integer  "forecast_hg"
     t.integer  "forecast_ag"
-    t.float    "forecast_homewin", limit: 24
-    t.float    "forecast_draw",    limit: 24
-    t.float    "forecast_awaywin", limit: 24
+    t.float    "forecast_homewin",      limit: 24
+    t.float    "forecast_draw",         limit: 24
+    t.float    "forecast_awaywin",      limit: 24
+    t.float    "FTHG_W",                limit: 24
+    t.float    "FTAG_W",                limit: 24
+    t.string   "result"
+    t.string   "score_forecast_result"
+    t.string   "perc_forecast_result"
+    t.boolean  "correctscore"
+    t.boolean  "correctresult"
+    t.float    "bet_stake",             limit: 24
+    t.float    "bet_odds",              limit: 24
+    t.float    "bet_return",            limit: 24
+  end
+
+  create_table "pr_multipliers", force: true do |t|
+    t.string   "season"
+    t.string   "prev_div"
+    t.integer  "prev_played"
+    t.integer  "prev_for"
+    t.integer  "prev_against"
+    t.string   "curr_div"
+    t.integer  "curr_played"
+    t.integer  "curr_for"
+    t.integer  "curr_against"
+    t.float    "atk_mod",      limit: 24
+    t.float    "def_mod",      limit: 24
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "teams", force: true do |t|
@@ -156,6 +184,9 @@ ActiveRecord::Schema.define(version: 20150422170001) do
     t.integer  "agp"
     t.integer  "agf"
     t.integer  "aga"
+    t.integer  "perfect_home"
+    t.integer  "perfect_away"
+    t.integer  "games_since_perfect"
   end
 
 end

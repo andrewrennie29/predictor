@@ -16,9 +16,7 @@ class FixturesController < ApplicationController
 	def updatebet
 	
 		Fixtures.update(params[:fixtures][:id], :bet_odds => params[:fixtures][:bet_odds], :bet_stake => params[:fixtures][:bet_stake])
-		
-		redirect_to viewforecast_path
-		
+	
 	end
 	
 end
