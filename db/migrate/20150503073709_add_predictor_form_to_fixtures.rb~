@@ -1,0 +1,4 @@
+class AddPredictorFormToFixtures < ActiveRecord::Migration
+  def change
+  end
+end

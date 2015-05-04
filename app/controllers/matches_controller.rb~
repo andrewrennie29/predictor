@@ -7,12 +7,36 @@ class MatchesController < ApplicationController
 	
 		#leagues = ['N1','EC']
 	
-		leagues = ['E0', 'E1', 'E2', 'E3', 'EC', 'SC0', 'SC1', 'SC2', 'SC3', 'D1', 'D2', 'I1', 'I2', 'SP1', 'SP2', 'F1', 'F2', 'N1' ]
+		if season = '1415'
+		
+			newdata = DataUpdates.where('newdata = true')
+			
+			leagues = []
+			
+			newdata.each do |n|
+			
+				divs = n.divisions.split(',')
+				
+				divs.each do |d|
+				
+					getresultsdata(baseURL + season + "/" + d + ".csv", season)
+				
+				end
+			
+				DataUpdates.update(n.id, :newdata => false)
+				
+			end
+			
+		else
+		
+			leagues = ['E0', 'E1', 'E2', 'E3', 'EC', 'SC0', 'SC1', 'SC2', 'SC3', 'D1', 'D2', 'I1', 'I2', 'SP1', 'SP2', 'F1', 'F2', 'N1' ]
+			
+			leagues.each do |l|
 
-		leagues.each do |l|
+				getresultsdata(baseURL + season + "/" + l + ".csv", season)
 
-			getresultsdata(baseURL + season + "/" + l + ".csv", season)
-
+			end
+			
 		end
 
 		redirect_to createseason_path(:season => season)
@@ -41,90 +65,97 @@ class MatchesController < ApplicationController
 				row=row.to_hash.select { |k, v| fields_to_insert.include?(k) }
 		
 				row["Date"] = Date.strptime(row["Date"],'%d/%m/%y')
-		
-				match = Matches.create!(row.to_hash.select { |k, v| fields_to_insert.include?(k) })
 				
-				hometeam = Teams.where('team = ? and season = ?', match.HomeTeam, prevseason(season)).first
-				awayteam = Teams.where('team = ? and season = ?', match.AwayTeam, prevseason(season)).first
-			
-				if hometeam.nil?
-			
-					hc = 1
+				if row["Date"] < Date.today
 				
-				else
-			
-					hc = (hometeam.hga + hometeam.aga).to_f / (hometeam.hgp + hometeam.agp).to_f
-
-					if hometeam.div != match.Div
-			
-						hmulti = prmultiplier(hometeam.div, match.Div, season)
+					match = Matches.create!(row.to_hash.select { |k, v| fields_to_insert.include?(k) })
 				
-						hc = hc + hmulti["Def"]
+					hometeam = Teams.where('team = ? and season = ?', match.HomeTeam, prevseason(season)).first
+					awayteam = Teams.where('team = ? and season = ?', match.AwayTeam, prevseason(season)).first
+			
+					if hometeam.nil?
+			
+						hc = 1
 				
-					end
-			
-				end
-			
-				if awayteam.nil?
-			
-					ac = 1
-				
-				else
-			
-					ac = (awayteam.hga + awayteam.aga).to_f / (awayteam.hgp + awayteam.agp).to_f
-			
-					if awayteam.div != match.Div
-			
-						amulti = prmultiplier(awayteam.div, match.Div, season)
-			
-						ac = ac + amulti["Def"]
-			
-					end
-
-				end
-							
-				whg = match.FTHG.to_f / ac
-				wag = match.FTAG.to_f / hc
-			
-				forecast = Fixtures.where("Date = ? and HomeTeam = ? and AwayTeam = ?", match.Date, match.HomeTeam, match.AwayTeam).first
-		
-				if !forecast.nil?
-				
-					if forecast.forecast_hg == match.FTHG && forecast.forecast_ag == match.FTAG
-				
-						forecastscore = true
-						
-						betstake = forecast.bet_stake.to_f
-						betodds = forecast.bet_odds.to_f
-						
-						unless betstake.nil?
-						
-							betreturn = betstake * betodds + betstake
-						
-						end
-						
 					else
+			
+						hc = (hometeam.hga + hometeam.aga).to_f / (hometeam.hgp + hometeam.agp).to_f
+
+						if hometeam.div != match.Div
+			
+							hmulti = prmultiplier(hometeam.div, match.Div, season)
 				
-						forecastscore = false
-					
-						unless forecast.bet_stake.nil?
-						
-							betreturn = 0
-						
+							hc = hc + hmulti["Def"]
+				
 						end
+			
+					end
+			
+					if awayteam.nil?
+			
+						ac = 1
+				
+					else
+			
+						ac = (awayteam.hga + awayteam.aga).to_f / (awayteam.hgp + awayteam.agp).to_f
+			
+						if awayteam.div != match.Div
+			
+							amulti = prmultiplier(awayteam.div, match.Div, season)
+			
+							ac = ac + amulti["Def"]
+			
+						end
+
+					end
+							
+					whg = match.FTHG.to_f / ac
+					wag = match.FTAG.to_f / hc
+			
+					forecast = Fixtures.where("Date = ? and HomeTeam = ? and AwayTeam = ?", match.Date, match.HomeTeam, match.AwayTeam).first
+		
+					if !forecast.nil?
+				
+						if forecast.FTHG == match.FTHG && forecast.FTAG == match.FTAG
+				
+							forecastscore = true
+						
+							betstake = forecast.bet_stake
+							betodds = forecast.bet_odds
+						
+							unless betstake.nil?
+						
+								betreturn = betstake.to_f * betodds.to_f
+						
+							end
+						
+						else
+				
+							forecastscore = false
+						
+							betstake = forecast.bet_stake
+							betodds = forecast.bet_odds
+						
+							unless forecast.bet_stake.nil?
+						
+								betreturn = 0
+						
+							end
 					
+						end
+				
+						Matches.update(match.id, :season => '20' + season, :forecast_hg => forecast.FTHG, :forecast_ag => forecast.FTAG, :forecast_homewin => forecast.home_win, :forecast_draw => forecast.draw, :forecast_awaywin => forecast.away_win, :FTHG_W => whg, :FTAG_W => wag, :correctscore => forecastscore, :bet_stake => betstake, :bet_odds => betodds, :bet_return => betreturn)
+				
+						forecast.destroy
+				
+					else
+			
+						Matches.update(match.id, :season => '20' + season, :FTHG_W => whg, :FTAG_W => wag)
+		
 					end
 				
-					Matches.update(match.id, :season => '20' + season, :forecast_hg => forecast.FTHG, :forecast_ag => forecast.FTAG, :forecast_homewin => forecast.home_win, :forecast_draw => forecast.draw, :forecast_awaywin => forecast.away_win, :FTHG_W => whg, :FTAG_W => wag, :correctscore => forecastscore, :bet_stake => betstake, :bet_odds => betodds, :bet_return => betreturn)
-				
-					forecast.destroy
-				
-				else
-			
-					Matches.update(match.id, :season => '20' + season, :FTHG_W => whg, :FTAG_W => wag)
-		
-				end
-		
+				end				
+						
 			end
 	
 		end
@@ -135,28 +166,64 @@ class MatchesController < ApplicationController
 
 		require 'csv'
 		require 'open-uri'
+		
+		updateURL = 'http://www.football-data.co.uk/matches.php'
+		
+		page_content = open(updateURL).read
+		page_updated = page_content.scan(/Latest fixtures uploaded: (.*) UK time./i).first
+		
+		lastupdated = Date.strptime(page_updated[0], '%d/%m/%y')
+		
+		du = DataUpdates.where('url = ? ', updateURL).first
+		
+		if du.nil?
+		
+			DataUpdates.create(:url => updateURL, :lastupdated => lastupdated)
+		
+		end
+		
+		unless lastupdated == du
+			
+			fields_to_insert = %w{ Div	Date	HomeTeam	AwayTeam }
 
-		fields_to_insert = %w{ Div	Date	HomeTeam	AwayTeam }
+			csv_text = open(url).read()
 
-		csv_text = open(url).read()
-
-		CSV.parse(csv_text, :headers => true).each do |row|
-			fixture_data = row.to_hash
+			CSV.parse(csv_text, :headers => true).each do |row|
+				fixture_data = row.to_hash
 	
-			fixture = Fixtures.where("Date = ? and HomeTeam = ? and AwayTeam = ?", Date.strptime(fixture_data["Date"],'%d/%m/%y'), fixture_data["HomeTeam"], fixture_data["AwayTeam"])
+				fixture = Fixtures.where("Date = ? and HomeTeam = ? and AwayTeam = ?", Date.strptime(fixture_data["Date"],'%d/%m/%y'), fixture_data["HomeTeam"], fixture_data["AwayTeam"])
 	
-			match = Matches.where("Date = ? and HomeTeam = ? and AwayTeam = ?", Date.strptime(fixture_data["Date"],'%d/%m/%y'), fixture_data["HomeTeam"], fixture_data["AwayTeam"])
+				match = Matches.where("Date = ? and HomeTeam = ? and AwayTeam = ?", Date.strptime(fixture_data["Date"],'%d/%m/%y'), fixture_data["HomeTeam"], fixture_data["AwayTeam"])
 	
-			if fixture.count==0 && match.count == 0
+				if fixture.count==0 && match.count == 0
 		
-				row=row.to_hash.select { |k, v| fields_to_insert.include?(k) }
+					row=row.to_hash.select { |k, v| fields_to_insert.include?(k) }
 		
-				row["Date"] = Date.strptime(row["Date"],'%d/%m/%y')
+					row["Date"] = Date.strptime(row["Date"],'%d/%m/%y')
 		
-				Fixtures.create!(row.to_hash.select { |k, v| fields_to_insert.include?(k) })
-		
+					fixture = Fixtures.create!(row.to_hash.select { |k, v| fields_to_insert.include?(k) })
+				
+					homeform = Matches.where('HomeTeam = ?', fixture.HomeTeam).order(date: :desc).limit(20)
+				
+					awayform = Matches.where('AwayTeam = ?', fixture.AwayTeam).order(date: :desc).limit(20)
+				
+					Fixtures.update(fixture.id,
+													:phform => homeform.where('correctscore = true and Date >= ?', homeform.minimum(:Date)).count,
+													:paform => awayform.where('correctscore = true and Date >= ?', awayform.minimum(:Date)).count,
+													:phgames => homeform.count,
+													:pagames => awayform.count)
+				end
+				
+				DataUpdates.update(du.id, :lastupdated => Date.today)
+				
+			else
+				
+				DataUpdates.update(du.id, :lastupdated => lastupdated)	
+				
 			end
-	
+			
+			
+			
 		end
 	
 	end
@@ -342,22 +409,20 @@ class MatchesController < ApplicationController
 	end
 
 	def forecastfixtures
-
-		fixturesURL = 'http://www.football-data.co.uk/fixtures.csv'
-
-		getfixturesdata(fixturesURL)
-
-		fixtures = Fixtures.all
-
-		fixtures.each do |f|
-
-			forecastmatch(f.HomeTeam, f.AwayTeam, '1415', f.Date)
-
-		end
-	
-		@fixtures = Fixtures.all.order(:Date, :Div, :HomeTeam)
+			
+			fixturesURL = 'http://www.football-data.co.uk/fixtures.csv'
+			
+			getfixturesdata(fixturesURL)
 		
-		@teams = Teams.all
+			fixtures = Fixtures.all
+
+			fixtures.each do |f|
+
+				forecastmatch(f.HomeTeam, f.AwayTeam, '1415', f.Date)
+
+			end
+			
+			redirect_to viewforecast_path
 		
 	end
 
@@ -404,5 +469,42 @@ class MatchesController < ApplicationController
 		return value
 
 	end
-
+	
+	def newdata
+		
+		require 'open-uri'
+		
+		countries = ['england','scotland','germany','italy','spain','france','netherlands']
+		
+		countries.each do |c|
+		
+			updateURL = 'http://www.football-data.co.uk/' + c + 'm.php'
+			
+			page_content = open(updateURL).read
+			page_updated = page_content.scan(/Last updated: (.*)I/i).first
+		
+			lastupdated = Date.strptime(page_updated[0].gsub(/\D/, ''), '%d%m%y')
+		
+			du = DataUpdates.where('url = ? ', updateURL).first
+		
+			if du.nil?
+		
+				du = DataUpdates.create(:url => updateURL, :lastupdated => lastupdated)
+			
+			end
+			
+			if lastupdated > du.lastupdated
+			
+				DataUpdates.update(du.id, :newdata => true)
+													
+			else
+			
+				DataUpdates.update(du.id, :newdata => false)
+			
+			end	
+			
+		end
+	
+	end
+	
 end

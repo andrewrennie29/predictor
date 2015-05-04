@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 	
 	match '/fixtures/recordbet/:id' => 'fixtures#recordbet', :via => [:get], :as => :recordbet
 	
+	match '/matches/newdata' => 'matches#newdata', :via => [:get], :as => :newdata
+	
 	patch 'fixtures/updatebet/' => 'fixtures#updatebet', :via => :post
 	
   # Example of regular route:

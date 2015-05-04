@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150428184813) do
+ActiveRecord::Schema.define(version: 20150504054657) do
+
+  create_table "data_updates", force: true do |t|
+    t.string   "url"
+    t.string   "divisions"
+    t.date     "lastupdated"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "newdata"
+  end
 
   create_table "fixtures", force: true do |t|
     t.string   "Div"
@@ -47,6 +56,10 @@ ActiveRecord::Schema.define(version: 20150428184813) do
     t.float    "draw",       limit: 24
     t.float    "bet_stake",  limit: 24
     t.float    "bet_odds",   limit: 24
+    t.integer  "phform"
+    t.integer  "phgames"
+    t.integer  "paform"
+    t.integer  "pagames"
   end
 
   create_table "form_matches", force: true do |t|

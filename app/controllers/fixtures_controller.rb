@@ -8,7 +8,7 @@ class FixturesController < ApplicationController
 
 	def view
 	
-		@fixtures = Fixtures.all
+		@fixtures = Fixtures.all.order(:date, :div, :hometeam)
 		@teams = Teams.all
 		
 	end
